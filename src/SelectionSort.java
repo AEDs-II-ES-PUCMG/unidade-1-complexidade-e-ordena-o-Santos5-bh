@@ -1,6 +1,6 @@
 import java.util.Arrays;
 
-public class InsertionSort<T extends Comparable<T>> implements IOrdenador<T> {
+public class SelectionSort<T extends Comparable<T>> implements IOrdenador<T> {
     private int comparacoes;
     private int movimentacoes;
     private double tempoOrdenacao;
@@ -37,7 +37,7 @@ public class InsertionSort<T extends Comparable<T>> implements IOrdenador<T> {
         T temp = vetor[x];
         vetor[x] = vetor[y];
         vetor[y] = temp;
-        movimentacoes+=3;
+        movimentacoes += 3;
     }
 
     @Override
@@ -45,21 +45,18 @@ public class InsertionSort<T extends Comparable<T>> implements IOrdenador<T> {
         T[] dadosOrdenados = Arrays.copyOf(dados, dados.length);
         int tamanho = dadosOrdenados.length;
         iniciar();
-        for (int i = 1; i < tamanho; i++) {
-            T temp = dadosOrdenados[i];
-            int j = i - 1;
-            while (j >= 0) {
-                this.comparacoes++; // Contabiliza a comparação a ser feita abaixo
-                if (dadosOrdenados[j].compareTo(temp) > 0) {
-                    dadosOrdenados[j+1] = dadosOrdenados[j];
-                    j--;
-                    this.movimentacoes++;            
-                } else {
-                    break; // Interrompe o while caso o elemento já esteja no lugar certo
+        for (int i = 0; i < tamanho - 1; i++) {
+            int menor = i;
+            for (int j = i + 1; j < tamanho; j++) {
+                comparacoes++;
+                if (dadosOrdenados[j].compareTo(dadosOrdenados[menor]) < 0) {
+                    menor = j;
                 }
             }
-            dadosOrdenados[j+1] = temp;
-        }	
+            if (menor != i) {
+                swap(i, menor, dadosOrdenados);
+            }
+        }
         terminar();
         return dadosOrdenados;
     }

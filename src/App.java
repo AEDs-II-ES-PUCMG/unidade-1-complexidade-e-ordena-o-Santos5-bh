@@ -50,9 +50,31 @@ public class App {
         System.out.println("Movimentações: " + bolha.getMovimentacoes());
         System.out.println("Tempo de ordenação (ms): " + bolha.getTempoOrdenacao());
 
-        /* TO DO
-        *Fazer a implementacao do restante do main para a ordenacao 
-        *  com os algoritmos InsertionSort e SelectionSort
-        */
+        InsertionSort<Integer> insercao = new InsertionSort<>();
+        insercao.ordenar(vetor);
+        System.out.println("\nVetor ordenado método Inserção:");
+        System.out.println("Comparações: " + insercao.getComparacoes());
+        System.out.println("Movimentações: " + insercao.getMovimentacoes());
+        System.out.println("Tempo de ordenação (ms): " + insercao.getTempoOrdenacao());
+
+        SelectionSort<Integer> selecao = new SelectionSort<>();
+        selecao.ordenar(vetor);
+        System.out.println("\nVetor ordenado método Seleção:");
+        System.out.println("Comparações: " + selecao.getComparacoes());
+        System.out.println("Movimentações: " + selecao.getMovimentacoes());
+        System.out.println("Tempo de ordenação (ms): " + selecao.getTempoOrdenacao());
+
+        System.out.println("\n--- Variando o tamanho do vetor para comparar os algoritmos ---");
+        for (int tamanho : tamanhosTesteMedio) {
+            System.out.println("\n[ Tamanho do vetor: " + tamanho + " ]");
+            Integer[] vetorTeste = gerarVetorObjetos(tamanho);
+
+            bolha.ordenar(vetorTeste);
+            System.out.printf("Bolha    -> Comparações: %12d | Movimentações: %12d | Tempo: %8.2f ms\n", bolha.getComparacoes(), bolha.getMovimentacoes(), bolha.getTempoOrdenacao());
+            insercao.ordenar(vetorTeste);
+            System.out.printf("Inserção -> Comparações: %12d | Movimentações: %12d | Tempo: %8.2f ms\n", insercao.getComparacoes(), insercao.getMovimentacoes(), insercao.getTempoOrdenacao());
+            selecao.ordenar(vetorTeste);
+            System.out.printf("Seleção  -> Comparações: %12d | Movimentações: %12d | Tempo: %8.2f ms\n", selecao.getComparacoes(), selecao.getMovimentacoes(), selecao.getTempoOrdenacao());
+        }
     }
 }
