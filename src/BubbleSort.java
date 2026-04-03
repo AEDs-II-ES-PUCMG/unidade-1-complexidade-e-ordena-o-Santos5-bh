@@ -46,12 +46,18 @@ public class BubbleSort<T extends Comparable<T>> implements IOrdenador<T>{
         T[] dadosOrdenados = Arrays.copyOf(dados, dados.length);
         int tamanho = dadosOrdenados.length;
         iniciar();
+        boolean trocou;
         for (int i = tamanho - 1; i > 0; i--) {
+            trocou = false;
             for (int j = 0; j < i; j++) {
                 comparacoes++;
-                if ((dadosOrdenados[j].compareTo(dadosOrdenados[j+1]) > 0))
-                swap (j, j + 1, dadosOrdenados);
+                if ((dadosOrdenados[j].compareTo(dadosOrdenados[j+1]) > 0)) {
+                    swap (j, j + 1, dadosOrdenados);
+                    trocou = true;
+                }
             }
+            if (!trocou) // Se não houve troca nesta passada, o vetor já está ordenado.
+                break;
         }	
         terminar();
         return dadosOrdenados;

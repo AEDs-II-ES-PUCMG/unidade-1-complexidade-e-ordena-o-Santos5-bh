@@ -1,4 +1,3 @@
-import java.util.Arrays;
 import java.util.Random;
 
 public class App {
@@ -43,30 +42,37 @@ public class App {
 
         BubbleSort<Integer> bolha = new BubbleSort<>();
 
-        Integer[] vetorOrdenadoBolha = bolha.ordenar(vetor);
+        bolha.ordenar(vetor);
 
-        System.out.println("\nVetor ordenado método Bolha:");
+        System.out.println("\n---------------------------------------------------------");
+        System.out.println("Vetor ordenado método Bolha:");
         System.out.println("Comparações: " + bolha.getComparacoes());
         System.out.println("Movimentações: " + bolha.getMovimentacoes());
         System.out.println("Tempo de ordenação (ms): " + bolha.getTempoOrdenacao());
 
         InsertionSort<Integer> insercao = new InsertionSort<>();
         insercao.ordenar(vetor);
-        System.out.println("\nVetor ordenado método Inserção:");
+        System.out.println("---------------------------------------------------------");
+        System.out.println("Vetor ordenado método Inserção:");
         System.out.println("Comparações: " + insercao.getComparacoes());
         System.out.println("Movimentações: " + insercao.getMovimentacoes());
         System.out.println("Tempo de ordenação (ms): " + insercao.getTempoOrdenacao());
 
         SelectionSort<Integer> selecao = new SelectionSort<>();
         selecao.ordenar(vetor);
-        System.out.println("\nVetor ordenado método Seleção:");
+        System.out.println("---------------------------------------------------------");
+        System.out.println("Vetor ordenado método Seleção:");
         System.out.println("Comparações: " + selecao.getComparacoes());
         System.out.println("Movimentações: " + selecao.getMovimentacoes());
         System.out.println("Tempo de ordenação (ms): " + selecao.getTempoOrdenacao());
+        System.out.println("---------------------------------------------------------");
 
-        System.out.println("\n--- Variando o tamanho do vetor para comparar os algoritmos ---");
+        System.out.println("\n=========================================================================================");
+        System.out.println("---          Variando o tamanho do vetor para comparar os algoritmos                  ---");
+        System.out.println("=========================================================================================");
         for (int tamanho : tamanhosTesteMedio) {
             System.out.println("\n[ Tamanho do vetor: " + tamanho + " ]");
+            System.out.println("-----------------------------------------------------------------------------------------");
             Integer[] vetorTeste = gerarVetorObjetos(tamanho);
 
             bolha.ordenar(vetorTeste);
@@ -75,6 +81,7 @@ public class App {
             System.out.printf("Inserção -> Comparações: %12d | Movimentações: %12d | Tempo: %8.2f ms\n", insercao.getComparacoes(), insercao.getMovimentacoes(), insercao.getTempoOrdenacao());
             selecao.ordenar(vetorTeste);
             System.out.printf("Seleção  -> Comparações: %12d | Movimentações: %12d | Tempo: %8.2f ms\n", selecao.getComparacoes(), selecao.getMovimentacoes(), selecao.getTempoOrdenacao());
+            System.out.println("-----------------------------------------------------------------------------------------");
         }
     }
 }

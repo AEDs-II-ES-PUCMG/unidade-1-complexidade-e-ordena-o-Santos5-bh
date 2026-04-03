@@ -47,6 +47,7 @@ public class InsertionSort<T extends Comparable<T>> implements IOrdenador<T> {
         iniciar();
         for (int i = 1; i < tamanho; i++) {
             T temp = dadosOrdenados[i];
+            this.movimentacoes++; // Movimento: leitura do valor do array para 'temp'
             int j = i - 1;
             while (j >= 0) {
                 this.comparacoes++; // Contabiliza a comparação a ser feita abaixo
@@ -59,6 +60,7 @@ public class InsertionSort<T extends Comparable<T>> implements IOrdenador<T> {
                 }
             }
             dadosOrdenados[j+1] = temp;
+            this.movimentacoes++; // Movimento: escrita de 'temp' na sua posição correta no array
         }	
         terminar();
         return dadosOrdenados;
