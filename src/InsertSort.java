@@ -1,20 +1,16 @@
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Comparator;
 
 
 public class InsertSort<T extends Comparable<T>> implements IOrdenador<T>{
 
-	private long comparacoes;
-	private long movimentacoes;
-	private LocalDateTime inicio;
-	private LocalDateTime termino;	
-	
-	public InsertSort() {
-		comparacoes = 0;
-		movimentacoes = 0;
-	}
+    private long comparacoes;
+    private long movimentacoes;
+    private long tempoExecucao;
+
+    public InsertSort() {
+        // Construtor padrão
+    }
 	
 	@Override
 	public T[] ordenar(T[] dados) {
@@ -25,47 +21,44 @@ public class InsertSort<T extends Comparable<T>> implements IOrdenador<T>{
 	public T[] ordenar(T[] dados, Comparator<T> comparador) {
 		T[] dadosOrdenados = Arrays.copyOf(dados, dados.length);
 		int tamanho = dadosOrdenados.length;
-		
-		inicio = LocalDateTime.now();
-		
-		for (int posReferencia = 1; posReferencia <= tamanho -1; posReferencia++) {
-			T valor = dadosOrdenados[posReferencia];
-            int j = posReferencia-1;
-            comparacoes++;
-            while(j >=0 && comparador.compare(valor,dadosOrdenados[j]) <0){
-                j--;
-                comparacoes++;
-            }
-                
-            copiarDados(j+1, posReferencia, dadosOrdenados);
-            dadosOrdenados[j+1] = valor;
-            
-		}	
-		termino = LocalDateTime.now();
+        this.comparacoes = 0;
+        this.movimentacoes = 0;
+        long start = System.nanoTime();
 
+        for (int i = 1; i < tamanho; i++) {
+            T chave = dadosOrdenados[i];
+            movimentacoes++; // Leitura do valor do array para a 'chave'
+            int j = i - 1;
+
+            /* Move os elementos do array que são maiores que a chave
+               para uma posição à frente de sua posição atual */
+            while (j >= 0) {
+                comparacoes++; // Contabiliza a comparação que será feita
+                if (comparador.compare(dadosOrdenados[j], chave) > 0) {
+                    dadosOrdenados[j + 1] = dadosOrdenados[j];
+                    movimentacoes++; // Deslocamento do elemento
+                    j--;
+                } else {
+                    break; // Encontrou a posição correta, interrompe o deslocamento
+                }
+            }
+            dadosOrdenados[j + 1] = chave;
+            movimentacoes++; // Escrita da 'chave' na sua posição correta
+		}	
+        this.tempoExecucao = System.nanoTime() - start;
 		return dadosOrdenados;
 	}
 	
-	private void copiarDados(int inicio, int fim, T[] vet) {
-		for (int i = fim; i > inicio; i--) {
-            movimentacoes++;
-            vet[i] = vet[i-1];
-        }
-	}
-	
+    @Override
 	public long getComparacoes() {
 		return comparacoes;
 	}
-	
+	@Override
 	public long getMovimentacoes() {
 		return movimentacoes;
 	}
 	
 	public double getTempoOrdenacao() {
-	    return  Duration.between(inicio, termino).toMillis();	    
+	    return tempoExecucao / 1_000_000.0;
 	}
-
-	
-
-	
 }

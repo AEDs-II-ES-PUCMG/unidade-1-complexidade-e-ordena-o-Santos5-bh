@@ -38,6 +38,7 @@ public class AppOficina {
     static Produto[] produtos;
     static Produto[] produtosPorId;
     static Produto[] produtosPorDescricao;
+    static Produto[] produtosPorDesconto;
     static int quantProdutos = 0;
     static String nomeArquivoDados = "produtos.txt";
     static IOrdenador<Produto> ordenador;
@@ -85,9 +86,11 @@ public class AppOficina {
         System.out.println("3 - Ordenar produtos");
         System.out.println("4 - Embaralhar produtos");
         System.out.println("5 - Listar produtos");
+        System.out.println("6 - Top 10 Maiores Descontos");
         System.out.println("0 - Finalizar");
        
-        return lerNumero("Digite sua opcao", Integer.class);
+        Integer opcao = lerNumero("Digite sua opcao", Integer.class);
+        return opcao != null ? opcao : -1;
     }
 
     static int exibirMenuOrdenadores() {
@@ -96,17 +99,22 @@ public class AppOficina {
         System.out.println("2 - Inserção");
         System.out.println("3 - Seleção");
         System.out.println("4 - Mergesort");
+        System.out.println("5 - Heapsort");
+        System.out.println("6 - Quicksort");
         System.out.println("0 - Finalizar");
        
-        return lerNumero("Digite sua opção", Integer.class);
+        Integer opcao = lerNumero("Digite sua opção", Integer.class);
+        return opcao != null ? opcao : -1;
     }
 
     static int exibirMenuComparadores() {
         cabecalho();
         System.out.println("1 - Padrão");
         System.out.println("2 - Por código");
+        System.out.println("3 - Por desconto");
         
-        return lerNumero("Digite sua opção", Integer.class);
+        Integer opcao = lerNumero("Digite sua opção", Integer.class);
+        return opcao != null ? opcao : -1;
     }
 
     // #endregion
@@ -135,7 +143,8 @@ public class AppOficina {
     static Produto localizarProduto() {
         cabecalho();
         System.out.println("Localizando um produto");
-        int numero = lerNumero("Digite o identificador do produto", Integer.class);
+        Integer numero = lerNumero("Digite o identificador do produto", Integer.class);
+        if (numero == null || produtosPorId == null) return null;
         
         // Busca binária utilizando o array previamente ordenado
         int inicio = 0;
@@ -170,7 +179,8 @@ public class AppOficina {
     private static void filtrarPorPrecoMaximo(){
         cabecalho();
         System.out.println("Filtrando por valor máximo:");
-        double valor = lerNumero("valor", Double.class);
+        Double valor = lerNumero("valor", Double.class);
+        if (valor == null || produtos == null) return;
         StringBuilder relatorio = new StringBuilder();
         relatorio.append("\n----------------------------------------\n");
         for (int i = 0; i < quantProdutos; i++) {
@@ -183,6 +193,10 @@ public class AppOficina {
 
     static void ordenarProdutos(){
         cabecalho();
+        if (produtos == null || quantProdutos == 0) {
+            System.out.println("Nenhum produto para ordenar.");
+            return;
+        }
         
         int opcao = exibirMenuOrdenadores();
         if (opcao == 0) return;
@@ -192,6 +206,8 @@ public class AppOficina {
             case 2 -> ordenador = new InsertSort<>();
             case 3 -> ordenador = new SelectionSort<>();
             case 4 -> ordenador = new Mergesort<>();
+            case 5 -> ordenador = new Heapsort<>();
+            case 6 -> ordenador = new Quicksort<>();
             default -> {
                 System.out.println("Opção inválida.");
                 return;
@@ -199,7 +215,18 @@ public class AppOficina {
         }
         
         int opcaoComp = exibirMenuComparadores();
-        Comparator<Produto> comparador = (opcaoComp == 2) ? new ComparadorPorCodigo() : Comparator.naturalOrder();
+        Comparator<Produto> comparador;
+        switch (opcaoComp) {
+            case 2:
+                comparador = new ComparadorPorCodigo();
+                break;
+            case 3:
+                comparador = new ComparadorPorDesconto();
+                break;
+            default: // case 1 e outros
+                comparador = Comparator.naturalOrder();
+                break;
+        }
         
         System.out.println("\nOrdenando, por favor aguarde...");
         Produto[] ordenados = ordenador.ordenar(produtos, comparador);
@@ -213,7 +240,9 @@ public class AppOficina {
     }
 
     static void embaralharProdutos(){
-        Collections.shuffle(Arrays.asList(produtos));
+        if (produtos != null) {
+            Collections.shuffle(Arrays.asList(produtos));
+        }
     }
 
     static void verificarSubstituicao(Produto[] copiaDados){
@@ -243,6 +272,28 @@ public class AppOficina {
         System.out.println("----------------------------------------");
     }
 
+    static void listarMaioresDescontos() {
+        cabecalho();
+        if (produtosPorDesconto == null || quantProdutos == 0) {
+            System.out.println("Nenhum produto carregado.");
+            return;
+        }
+        System.out.println("Top 10 Produtos com Maiores Descontos:");
+        System.out.println("----------------------------------------");
+        int limite = Math.min(10, quantProdutos);
+        boolean encontrou = false;
+        for (int i = 0; i < limite; i++) {
+            if (produtosPorDesconto[i].getPorcentagemDesconto() > 0) {
+                System.out.println((i + 1) + "º Lugar: " + produtosPorDesconto[i]);
+                encontrou = true;
+            }
+        }
+        if (!encontrou) {
+            System.out.println("Nenhum produto em oferta/vencendo no momento.");
+        }
+        System.out.println("----------------------------------------");
+    }
+
     public static void main(String[] args) {
         teclado = new Scanner(System.in);
         
@@ -251,9 +302,11 @@ public class AppOficina {
         if (produtos != null) {
             produtosPorId = Arrays.copyOf(produtos, quantProdutos);
             produtosPorDescricao = Arrays.copyOf(produtos, quantProdutos);
+            produtosPorDesconto = Arrays.copyOf(produtos, quantProdutos);
             
             Arrays.sort(produtosPorId, new ComparadorPorCodigo());
             Arrays.sort(produtosPorDescricao);
+            Arrays.sort(produtosPorDesconto, new ComparadorPorDesconto());
         }
         
         embaralharProdutos();
@@ -268,6 +321,7 @@ public class AppOficina {
                 case 3 -> ordenarProdutos();
                 case 4 -> embaralharProdutos();
                 case 5 -> listarProdutos();
+                case 6 -> listarMaioresDescontos();
                 case 0 -> System.out.println("FLW VLW OBG VLT SMP.");
             }
             pausa();

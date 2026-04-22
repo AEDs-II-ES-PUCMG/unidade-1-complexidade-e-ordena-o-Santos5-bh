@@ -1,5 +1,3 @@
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Comparator;
 
@@ -7,14 +5,14 @@ public class Mergesort<T extends Comparable<T>> implements IOrdenador<T>{
     
         private long comparacoes;
         private long movimentacoes;
-        private LocalDateTime inicio;
-        private LocalDateTime termino;
+        private long tempoExecucao;
         private T[] dadosOrdenados;
         private Comparator<T> comparador;
         
         public Mergesort() {
             comparacoes = 0;
             movimentacoes = 0;
+            tempoExecucao = 0;
         }
          
         @Override
@@ -27,9 +25,11 @@ public class Mergesort<T extends Comparable<T>> implements IOrdenador<T>{
             this.comparador = comparador;
             int tamanho = dados.length;
             dadosOrdenados = Arrays.copyOf(dados, tamanho);
-            inicio = LocalDateTime.now();
+            this.comparacoes = 0;
+            this.movimentacoes = 0;
+            long start = System.nanoTime();
             mergesort(0, tamanho-1);
-            termino = LocalDateTime.now();
+            this.tempoExecucao = System.nanoTime() - start;
             return dadosOrdenados;
         }
     
@@ -84,8 +84,7 @@ public class Mergesort<T extends Comparable<T>> implements IOrdenador<T>{
         }
         
         public double getTempoOrdenacao() {
-            return Duration.between(inicio, termino).toMillis();
+            return tempoExecucao / 1_000_000.0;
         }
 
 }
-

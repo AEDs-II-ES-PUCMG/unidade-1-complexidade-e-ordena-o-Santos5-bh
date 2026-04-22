@@ -87,6 +87,19 @@ public abstract class Produto implements Comparable<Produto> {
      */
     public abstract double valorDeVenda();
     
+    /**
+     * Calcula e retorna a porcentagem de desconto aplicada ao produto.
+     * O cálculo é feito comparando o preço de venda com o preço cheio (custo + margem).
+     * @return Um double entre 0.0 e 1.0 representando a porcentagem de desconto.
+     */
+    public double getPorcentagemDesconto() {
+        double precoCheio = this.precoCusto * (1 + this.margemLucro);
+        if (precoCheio <= 0)
+            return 0.0;
+        double precoVenda = this.valorDeVenda();
+        return 1.0 - (precoVenda / precoCheio);
+    }
+
     @Override
     /**
      * Retorna o código identificador do produto. É um valor único para cada produto (==chave)
@@ -105,6 +118,10 @@ public abstract class Produto implements Comparable<Produto> {
     public String toString(){
         NumberFormat moeda = NumberFormat.getCurrencyInstance();
         
+        double desconto = getPorcentagemDesconto();
+        if (desconto > 0) {
+            return String.format("%04d - %s: %s (Desconto de %.0f%%)", idProduto, descricao, moeda.format(valorDeVenda()), desconto * 100);
+        }
         return String.format("%04d - %s: %s", idProduto, descricao, moeda.format(valorDeVenda()));
     }
 
