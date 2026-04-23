@@ -82,7 +82,7 @@ public class AppOficina {
     static int exibirMenuPrincipal() {
         cabecalho();
         System.out.println("1 - Procurar produto");
-        System.out.println("2 - Filtrar produtos por preco maximo");
+        System.out.println("2 - Localizar pedidos Premium");
         System.out.println("3 - Ordenar produtos");
         System.out.println("4 - Embaralhar produtos");
         System.out.println("5 - Listar produtos");
@@ -176,7 +176,8 @@ public class AppOficina {
         System.out.println(mensagem);
     }
 
-    private static void filtrarPorPrecoMaximo(){
+    // #region pra que listar o valor acima e n abaixo???
+    private static void localizarPedidosPremium(){
         cabecalho();
         System.out.println("Filtrando por valor máximo:");
         Double valor = lerNumero("valor", Double.class);
@@ -184,7 +185,7 @@ public class AppOficina {
         StringBuilder relatorio = new StringBuilder();
         relatorio.append("\n----------------------------------------\n");
         for (int i = 0; i < quantProdutos; i++) {
-            if(produtos[i].valorDeVenda() < valor)
+            if(produtos[i].valorDeVenda() > valor)
             relatorio.append(produtos[i]+"\n");
         }
         relatorio.append("----------------------------------------");
@@ -202,7 +203,7 @@ public class AppOficina {
         if (opcao == 0) return;
         
         switch (opcao) {
-            case 1 -> ordenador = new Bubblesort<>();
+            case 1 -> ordenador = new BubbleSort<>();
             case 2 -> ordenador = new InsertSort<>();
             case 3 -> ordenador = new SelectionSort<>();
             case 4 -> ordenador = new Mergesort<>();
@@ -317,7 +318,7 @@ public class AppOficina {
             opcao = exibirMenuPrincipal();
             switch (opcao) {
                 case 1 -> mostrarProduto(localizarProduto());
-                case 2 -> filtrarPorPrecoMaximo();
+                case 2 -> localizarPedidosPremium();
                 case 3 -> ordenarProdutos();
                 case 4 -> embaralharProdutos();
                 case 5 -> listarProdutos();

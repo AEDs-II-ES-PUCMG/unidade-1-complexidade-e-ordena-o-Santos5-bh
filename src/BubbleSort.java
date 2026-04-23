@@ -2,13 +2,13 @@ import java.util.Arrays;
 import java.util.Comparator;
 
 
-public class Bubblesort<T extends Comparable<T>> implements IOrdenador<T>{
+public class BubbleSort<T extends Comparable<T>> implements IOrdenador<T>{
 
     private long comparacoes;
     private long movimentacoes;
     private long tempoExecucao;
 
-    public Bubblesort() {
+    public BubbleSort() {
         // Construtor padrão
     }
 	

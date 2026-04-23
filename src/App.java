@@ -22,7 +22,7 @@ public class App {
         int tam = 20;
         Integer[] vetor = gerarVetorObjetos(tam);
 
-        Bubblesort<Integer> bolha = new Bubblesort<>();
+        BubbleSort<Integer> bolha = new BubbleSort<>();
 
         bolha.ordenar(vetor);
 
